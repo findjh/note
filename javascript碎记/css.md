@@ -1,0 +1,3 @@
+- align-item的默认值是stretch，就是拉伸
+- letter-spacing:0.3em ，用于增加字符
+- dom.style.cssText = ' '

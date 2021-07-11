@@ -1,0 +1,1 @@
+APP.vue的dom会覆盖掉index.html的div

@@ -1,0 +1,44 @@
+- 创建分支：git checkout -b 分支名
+
+  相当于下面这两行
+
+```console
+$ git branch 分支名
+$ git checkout 分支名
+```
+
+切换分支：git checkout master
+
+- 合并分支：
+
+  - 查看当前分支git branch, 切换到master分支  git checkout master
+
+  - 合并其他分支到主分支git merge 其他分支名
+
+  -  推送到远端git push
+
+    
+
+- 当远端没有新分支时，就不能直接push，需要git push -u origin login, 之后远端就有login分支，以后推送就在当前分支直接git push 
+
+- git branch [branch-name] 新建一个分支，但依然停留在当前分支
+
+- 如果同一个文件在合并分支时都被修改了则会引起冲突：解决的办法是我们可以修改冲突文件后重新提交！选择要保留他的代码还是你的代码。
+
+  如果冲突了协商即可。
+
+  
+
+- 删除分支 git branch -d [branch-name]
+
+- 删除远程分支 git push origin --delete   [branch-name]
+
+- git merge [branch] 合并指定分支到当前分支
+
+- https://blog.csdn.net/weixin_41975655/article/details/82887273
+
+- git fetch origin master:dev  拉取远端分支到本地分支dev
+
+  git branch -a 查看拉取到本地的分支列表
+
+  git checkout -b dev origin/dev 创建本地分支dev

@@ -1,0 +1,7 @@
+- 引用icon-font的字体类步骤：
+
+  把从阿里字体下载下来的文件（ttf,woff,woff2,css）复制到fonts文件夹，然后main.js  里面import (./fonts/iconfont.css)，这样就可以全局使用
+
+  
+
+
