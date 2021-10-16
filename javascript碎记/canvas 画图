@@ -1,0 +1,122 @@
+import { ref, VNodeTypes, Ref } from 'vue';
+import { APISalesGetQrcode } from '../services'; //request 接口引入
+import { ArgsProps } from 'ant-design-vue/lib/message';
+import { message } from 'ant-design-vue';
+
+export default function (searchData: Ref<any>, resetSpuAndSku: () => void) {
+  const imgUrl = ref('');
+  // 生成海报图
+  const generateQRCode = async (params: any): Promise<void> => {
+    // 生成海报图片方法
+    function canvasInit(data: {
+      item_name: any;
+      sku_name: any;
+      rental_array: Array<any>;
+      cover: string;
+      qrcode_img: string;
+    }) {
+      const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+      const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+      ctx.clearRect(0, 0, 896, 1326);
+      // 画背景图
+      const imgbg = new Image();
+      imgbg.onload = () => {
+        imgbg.width = 896;
+        imgbg.height = 1326;
+        // 画图片
+        ctx.drawImage(imgbg, 0, 0, 896, 1326);
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        canvasItemInit();
+      };
+      imgbg.crossOrigin = 'anonymous';
+      imgbg.src = 'https://img1.rrzuji.cn/uploads/scheme/2109/06/o/UBgpbZLCaiEQXpHI2GGE.png';
+      // 绘制商品图片，文字，二维码
+      function canvasItemInit() {
+        // 绘制自动换行的字符串
+        function drawText(t: string, x: number, y: number, w: number, f: string, c: string) {
+          const chr = t.split('');
+           let temp = '';
+           const row = [];
+          ctx.font = f;
+          ctx.fillStyle = c;
+          ctx.textAlign = 'left';
+
+           for (let a = 0; a < chr.length; a++) {
+             if (ctx.measureText(temp).width < w) {
+            } else {
+               if (row.length == 0 && chr.length > a) {
+                 temp = temp.substring(0, temp.length - 2);
+                 temp += '...';
+             }
+              row.push(temp);
+              temp = '';
+             }
+             temp += chr[a];
+           }
+           row.push(temp);
+           for (let b = 0; b < row.length && b < 1; b++) {
+              const textY = row.length == 1 ? y + 20 + 24 * 2 : y + (b + 1) * 24 * 2;
+             const textY = y + 20 + 24 * 2; 
+             ctx.fillText(row[b], x, textY);
+          }       
+        }
+        // 文字
+        drawText(data.item_name, 152 * 2, 518 * 2, 240 * 2, 'bold 32px PingFangSC-Regular', 'rgba(0, 0, 0, 0.85)');
+        drawText(`套餐: ${data.sku_name}`, 152 * 2, 544 * 2, 240 * 2, '30px PingFangSC-Regular', 'rgba(0, 0, 0, 0.65)');
+        drawText(
+          `租期: ${data?.rental_array[0]?.format_tenancy}:${data?.rental_array[0]?.rental}元/天`,
+          152 * 2,
+          570 * 2,
+          240 * 2,
+          '30px PingFangSC-Regular',
+          'rgba(0, 0, 0, 0.65)',
+        );
+        // 画商品图
+        const img = new Image();
+        img.onload = () => {
+          img.width = 80 * 2;
+          img.height = 80 * 2;
+          // 画图片
+          ctx.drawImage(img, 54 * 2, 534 * 2, 80 * 2, 80 * 2);
+          imgUrl.value = canvas?.toDataURL('image/png');
+        };
+        img.crossOrigin = 'anonymous';
+        img.src = data.cover;
+
+        // 画二维码
+        const img2 = new Image();
+        img2.onload = () => {
+          img2.width = 200 * 2;
+          img2.height = 200 * 2;
+          // 画图片
+          ctx.drawImage(img2, 124 * 2, 164 * 2, 200 * 2, 200 * 2);
+          imgUrl.value = canvas.toDataURL('image/png');
+        };
+        img2.crossOrigin = 'anonymous';
+        img2.src = data.qrcode_img;
+      }
+    }
+    if (searchData.value.id) {
+      APISalesGetQrcode({
+        data: {
+          ...params,
+          item_id: searchData.value.id,
+          rental_array: JSON.stringify([params.rental_array]),
+        },
+      }).then(
+        (res: {
+          data: { item_name: any; sku_name: any; rental_array: Array<any>; cover: string; qrcode_img: string };
+        }) => { 
+          canvasInit(res.data);
+        },
+        (err: { message: VNodeTypes | ArgsProps }) => {
+          message.error(err.message);
+        },
+      );
+    }
+  };
+  return {
+    generateQRCode,
+    imgUrl,
+  };
+}
