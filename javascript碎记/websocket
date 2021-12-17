@@ -1,0 +1,85 @@
+单工：单向通信； 半双工：单双向通信，同一时间点只能单向流动，先有请求再有响应，不能同时流动。就像单车道。  全双工：全双向通信，就像双车道，可以同时通信。
+http:半双工协议，服务器不能主动推送数据给浏览器。
+服务端轮询案例：(长轮询) 等待服务端返回结果的时间比较长！
+/** 命令nodemon app.js开启服务端
+  let express = require ('express');
+  let app = express();
+  console.log('__dirname',__dirname)
+  app.use(express.static(__dirname));
+  let count = 0;
+  app.get('/clock',function(req,res){
+    console.log('服务端接受到请求,开始轮询！！！！！')
+    let timer = setInterval(function(){
+      if(++count === 4){
+        res.send(`菜价变化了${Math.random()}`);
+        count = 0;
+        clearInterval(timer)
+      }
+    },1000)
+  })
+  app.listen(9000)
+
+**/
+/** 前端
+  <script>
+        let clock = document.getElementById('clock')
+        function send(){
+            let xhr = new XMLHttpRequest;
+            xhr.open('get','/clock',true);
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    clock.innerHTML = xhr.responseText;
+                    send(); //获取到服务器响应后，再发起请求
+                }
+            }
+            xhr.send();
+        }
+        send();
+    </script>
+**/
+
+iframe流：通过在HTML页面里嵌入一个隐藏的iframe，然后将这个iframe的src属性设为对一个长连接的请求，服务器端就能源源不断地往客户推送数据。
+ 长连接：服务端返回用的方法改为res.write （不要用res.send，因为send=write+关闭）
+ iframe案例：
+ /** 服务端：
+  let express = require ('express');
+  let app = express();
+  app.use(express.static(__dirname));
+  app.get('/clock',function(req,res){
+    console.log('服务端接受到请求')
+    setInterval(()=>{
+      res.write(`
+        <script>
+          parent.setTime('${new Date().toLocaleString()}')
+        </script>
+      `)
+    },1000)
+  })
+app.listen(9000)
+
+
+前端：
+  <body>
+      <div id="app"></div>
+      <iframe src="/clock" style="visibility: hidden;"></iframe>
+      <script>
+          function setTime(ts){
+              let app = document.getElementById('app');
+              app.innerHTML = ts;
+          }
+      </script>
+  </body>
+ **/
+ 
+display:none;不占位置 opacity,visibility占位置；opactiy有事件；visibility无事件；
+
+
+
+
+
+
+
+
+
+
+
