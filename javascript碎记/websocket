@@ -47,6 +47,7 @@ iframe流：通过在HTML页面里嵌入一个隐藏的iframe，然后将这个i
   app.use(express.static(__dirname));
   app.get('/clock',function(req,res){
     console.log('服务端接受到请求')
+    res.setHeader('Content-Type','text/html')
     setInterval(()=>{
       res.write(`
         <script>
@@ -71,14 +72,87 @@ app.listen(9000)
   </body>
  **/
  
-display:none;不占位置 opacity,visibility占位置；opactiy有事件；visibility无事件；
+display:none不占位置; opacity,visibility占位置；opactiy有事件；visibility无事件；
 
+EventSource流：也叫‘server-sent-event’。
+浏览器端：
+  浏览器需要创建一个EventSource对象，并且传入一个服务端的接口URI作为参。
+  默认EventSource对象通过侦听message事件获取服务端传来的消息。
+  open 事件在http连接建立后触发。
+  error事件会在通信错误（连接中断、服务端返回数据失败）后触发。
+  同时EventSource允许服务端指定自定义事件，客户端侦听该事件即可；
+  不能跨域；
+服务器端：
+  MIMI格式：text/event-stream, 基于HTTP1.1长连接，针对1.0的服务器需要特殊设置。
+  event-source：utf-8格式。消息每个字段用“\n”做分隔。4个字段：
+    Event:事件类型；
+    Data:发送的数据；
+    ID:每条事件流的ID;
+    Retry:浏览器重新连接需要的时间，以及自动重新连接的过程，之前收到的最后一个事件流ID会被发送到服务器
 
+\n :new line 换行；
+\r: 回车，回到起始位置； 
+案例：
+/**
+  let express = require ('express');
+  let app = express();
+  app.use(express.static(__dirname));
+  app.get('/clock',function(req,res){
+    console.log('服务端接受到请求')
+    let counter = 0;
+    res.setHeader('Content-Type','text/event-stream')   //一定要加这行
+    setInterval(()=>{
+      res.write(`id:${++counter}\nevent:message\ndata:${new Date().toLocaleString()}\n\n`)  // 后面一定要加 \n\n 标识结束
+    },1000)
+  })
+  app.listen(9000)
+  
+  前端：
+    <body>
+    <div id="app">time:~~</div>
+    <script>
+        let es = new EventSource('/clock');
+        es.onmessage = function(e){
+            let data = e.data;
+            app.innerHTML = data;
+        }
+    </script>
+</body>
+  
+**/
 
+res.on('close',function(){}) //监听连接的关闭。
 
+websocket:可以跨域。
+案例：
+/**
+  let express = require ('express');
+  let app = express();
+  app.use(express.static(__dirname));
+  let WebSocketServer = require('ws').Server;
+  let server = new WebSocketServer({port:3000}) //ws端口号不能和node服务端一致！
+  server.on('connection',function(socket){
+    console.log('服务端：socket连接成功')
+    socket.on('message',function(message){
+      console.log('服务端：已经接受到了客户端的消息--'+message);
+    })
+    socket.send('给你一个炸弹')
 
-
-
+  })
+  app.listen(9000)
+  
+  
+   <script>
+        let socket = new WebSocket('ws://localhost:3000')
+        socket.onopen = function(){
+            console.log('客户端：连接已经打开');
+        }
+        socket.onmessage = function(event){
+            console.log('客户端：收到--'+event.data);
+            socket.send('abcedfu')
+        }
+    </script>
+**/
 
 
 
