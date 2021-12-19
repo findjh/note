@@ -61,3 +61,18 @@
 
 - 当html不设置背景时，body的背景将作为整个浏览器的背景色，而不是body标签自己的背景色。
   当设置html背景色后，body的背景色就变成了body自己的背景色，此时html的背景色将被浏览器获取成为浏览器的背景色
+  
+- 正则方法转换url参数为对象:
+/**
+  const str = '?a=1&b=2&c=3&'
+  function parser(str){
+    const obj = {}
+    const reg = /([^?&]+)=([^?&]+)/g;
+    str.replace(reg,function(){
+      obj[arguments[1]] = arguments[2]
+    })
+    return obj;
+  }
+  const obj = parser(str);
+  console.log(obj)
+**/
