@@ -74,7 +74,7 @@ app.listen(9000)
  
 display:none不占位置; opacity,visibility占位置；opactiy有事件；visibility无事件；
 
-EventSource流：也叫‘server-sent-event’。
+EventSource流：也叫‘server-sent-event’。 //缺点：浏览器的刷新按钮一直是加载状态
 浏览器端：
   浏览器需要创建一个EventSource对象，并且传入一个服务端的接口URI作为参。
   默认EventSource对象通过侦听message事件获取服务端传来的消息。
@@ -195,5 +195,12 @@ socket.io库：
 
 所有人广播：io.emit('message','全局广播');
 向除了自己外的所有人广播：socket.broadcast.emit('message',msg);
-
-
+向房间内广播：从服务器的角度来提交事件，提交者会包含在内。
+              io.in('myRoom').emit('message',msg);  
+             io.of('/news').in('myRoom').emit('message',msg);
+向房间内广播：从客户端的角度来提交事件，提交者会排除在外。
+//向myRoom广播一个事件，在此房间内除了自己外的所有客户都会收到消息。
+              socket.broadcast.to('myRoom').emit('message',msg);  
+             socket.broadcast.to('myRoom').emit('message',msg);
+             
+获取房间列表：io.socket.adapter.rooms;
