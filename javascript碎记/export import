@@ -1,0 +1,2 @@
+export 导出的是接口，需要用解构的方式去获取。
+export default 导出具体的值。
