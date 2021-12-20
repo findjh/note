@@ -1,0 +1,5 @@
+vuex :内部会创造一个vue实例，通信用的。
+state: =>data。
+getters: =>computed，当依赖的值变化后会重新执行。
+mutations:vue中唯一可以state的方法，同步的！ 
+actions: 异步的！
