@@ -1,0 +1,46 @@
+class WS{
+  constructor(config = {}){
+    this.url = config.url || 'localhost';
+    this.port = config.port || 4000;
+    this.protocol = config.protocol || 'ws';
+    //心跳检测
+    this.time = config.time || 30 * 1000;
+    this.ws = null;
+  }
+  onOpen=()=>{
+    //websocket 是基于tcp 第一次连接靠的http 但是不能修改header
+    //首次连接时进行鉴权
+    this.ws.send(JOSN.stringify({ //格式JSON.stringify
+      type:'auth',
+      data:'token信息'
+    }))
+  }
+  onMessage=(e)=>{
+    //接收到信息1秒钟后检查服务器心跳
+    this.checkServer();
+    let {type, data} = JSON.parse(e);
+    console.log(type,data);
+  }
+  onClose=()=>{
+    this.ws.close();
+  }
+  onError=()=>{
+    setTimeout(()=>{
+      this.create();
+    }, 1000)
+  }
+  create=()=>{
+    this.ws = new WebSocket(`${this.protocol}://${this.url}:${this.port}`);
+    this.ws.onopen = this.onOpen;
+    this.ws.onmessage = this.onMessage;
+    this.ws.onclose = this.onClose;
+    this.ws.onerror = this.onError;
+  }
+  checkServer(){
+    clearTimeout(this.timer); //防抖。 如果客户端有接受到服务端的心跳检测就会清除该 断线重连 的定时器。
+    this.timer = setTimeout(()=>{
+      this.onClose();
+      this.onError();
+    },this.time + 1000) //断线重连
+  }
+}
