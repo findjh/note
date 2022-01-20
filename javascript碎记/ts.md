@@ -69,4 +69,4 @@ let p : IPerson = {
 p.name = 'xx';
 console.log(p.name);
 ```
-
+- class的constructor 参数中前面增加修饰符public，标识此属性放到了实例上。
