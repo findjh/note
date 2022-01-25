@@ -1,0 +1,74 @@
+```
+<template>
+  <div id="app">
+    <transition-group tag="ul" name="list">
+      <li
+        v-for="item in data"
+        :key="item.id"
+        class="item"
+        @click="deleteItem(item.id)"
+      >
+        {{ item }}
+      </li>
+    </transition-group>
+    <button @click="add">增加</button>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, reactive, toRefs, watchEffect } from "vue";
+
+export default defineComponent({
+  name: "App",
+  components: {},
+  setup() {
+    let data = reactive([
+      {
+        id: 1,
+        item: "项目1",
+      },
+      {
+        id: 2,
+        item: "项目3",
+      },
+    ]);
+    const add = () => {
+      const id = data[data.length - 1].id + 1;
+      data.push({ id, item: `项目${id}` });
+    };
+    const deleteItem = (id: number) => {
+      data.find((item, index) => {
+        if (item.id == id) {
+          data.splice(index, 1);
+          return true;
+        }
+      });
+    };
+    return {
+      data,
+      add,
+      deleteItem,
+    };
+  },
+});
+</script>
+
+<style scoped>
+.item {
+  box-sizing: border-box;
+  height: 40px;
+  width: 200px;
+  border: 2px solid #000;
+  line-height: 40px;
+}
+.list-enter-active,
+.list-leave-active{
+  transition: height 8s linear;
+}
+.list-enter-from,
+.list-leave-to{
+  height: 0;
+}
+</style>
+```
+
