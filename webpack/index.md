@@ -65,6 +65,7 @@ module:{
             {
                 //css-loader 解析@import 这种语法
                 //style-loader 负责把css插入到head的标签中
+                //less-loader 把less -> css
                 //loader的特点 希望单一
                 //loader的用法 字符串只用一个loader
                 //多个loader需要 []
@@ -76,10 +77,45 @@ module:{
                     'css-loader'
                 ]
             },
+            {
+                test:/\.less$/,
+                use:['style-loader','css-loader','less-loader']
+            },
             // {
             //     test:/\.jsx$/,
             // }
         ]
     }
 ```
+
+### mini-css-extract-plugin  
+
+注意插件都是class
+
+```js
+let MiniCssExtractPlugin = require('mini-css-extract-plugin')
+plugins:[
+        new MiniCssExtractPlugin({
+            filename:'main.css',//将css内容放到main.css文件里面
+        })
+    ],
+module:{ 
+    	//抽离成 css 文件，以link的方式引用。
+        rules:[
+            {
+                test:/\.css$/,
+                use:[
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ]
+            },
+            {
+                test:/\.less$/,
+                use:[MiniCssExtractPlugin.loader,'css-loader','less-loader']
+            }
+        ]
+    }
+```
+
+
 
