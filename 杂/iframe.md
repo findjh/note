@@ -13,3 +13,19 @@ indow.frames['print_page'].print();
 
 
 
+### iframe通信        
+
+- 同源：根据父页面以及cookie
+- 不同源 ： 设置子域的方法
+-  [参考](https://blog.csdn.net/weixin_43837268/article/details/91347640)
+
+
+
+
+
+
+
+
+
+
+
