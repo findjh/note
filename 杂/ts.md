@@ -71,3 +71,4 @@ console.log(p.name);
 ```
 - class的constructor 参数中前面增加修饰符public，标识此属性放到了实例上。
 - let num:number = undefined; //undefined和null可以赋值给任何类型
+ - ts的class中有方法重载，但js没有！！
