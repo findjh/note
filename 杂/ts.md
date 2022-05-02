@@ -2,8 +2,6 @@
 
 - 构造方法：super()   普通方法: super.方法()
 
-- ![image-20210620223015347](C:\Users\JH\AppData\Roaming\Typora\typora-user-images\image-20210620223015347.png)
-
 - private只能在本身类里面访问，protected可以在子类里面访问， 默认是public
 
 - 访问私有实例
@@ -33,17 +31,12 @@
 
 - static 类静态 如果是只读 ：static readonly
 
-  
 
-- ![image-20210620224749938](C:\Users\JH\AppData\Roaming\Typora\typora-user-images\image-20210620224749938.png)
-
-字段和方法都是public  非静态
-
-
+- 字段和方法都是public  非静态
 
 - 实体类可以不写constructor 
 
-- ```
+- ```js
   interface Animal{
     name ?:string
     sex ?:string
@@ -56,7 +49,7 @@
 
 - readonly属性在赋值后不能再修改
 
-```
+```js
 interface IPerson{
   readonly name : string;
   id : number
@@ -71,4 +64,25 @@ console.log(p.name);
 ```
 - class的constructor 参数中前面增加修饰符public，标识此属性放到了实例上。
 - let num:number = undefined; //undefined和null可以赋值给任何类型
- - ts的class中有方法重载，但js没有！！
+- ts的class中有方法重载，但js没有！！
+- static修饰符表示在类对象上定义一个属性
+- 类里的方法相当于在类.prototype定义了一个方法。
+ ```js
+ class Greeter {
+    static standardGreeting = "Hello, there";
+    sayHi(){
+        return Greeter.standardGreeting;
+    }
+}
+
+转换后的js
+var Greeter = /** @class */ (function () {
+    function Greeter() {
+    }
+    Greeter.prototype.sayHi = function () {
+        return Greeter.standardGreeting;
+    };
+    Greeter.standardGreeting = "Hello, there";
+    return Greeter;
+}());
+```
