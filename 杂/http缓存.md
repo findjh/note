@@ -44,4 +44,4 @@ res.setHeader('Expires', new Date( Date.now() + 30*1000) ).toUTCString();// 访�
  ```
  
  ### 强制缓存搭配协商缓存
- - 
+ - https://m.imooc.com/article/22841
