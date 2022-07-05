@@ -48,3 +48,13 @@ location /img/ {
   ```
 
   
+
+- 部署
+
+  
+
+  ![image-20220702025603335](D:\Project\note\打包&部署\assets\image-20220702025603335.png)
+
+- nginx 启动命令
+
+  ![image-20220702025639522](D:\Project\note\打包&部署\assets\image-20220702025639522.png)
