@@ -15,7 +15,6 @@ resolveloader:{
 
 - 除了js、json ,其他文件要配置loader才能让webpack认识
 
-  
 
 #### css
 
@@ -40,10 +39,17 @@ resolveloader:{
 }
 ```
 
-#### #### url-loader
+#### url-loader
 
 - 小于limit 就转成base64
 
+  ```js
+  options:{
+      outputPath: 'images', //指定写入到输出目录images里
+      publicPath: '/images' //不写这个访问路径会有问题。
+  }
+  ```
+  
   
 
 webpack5
@@ -58,5 +64,26 @@ webpack5
                 },
             }
 },
+```
+
+#### px2rem-loader
+
+```js
+//webpack.config.js
+{
+    loader:'px2rem-loader',
+        options:{
+            remUnit: 75,//一个rem是多少像素，
+            remPrecision:8, //计算REM的单位，保留几位小数 设置精度
+        }
+}
+//index.html
+let docElement= document.documentElement;
+function setRemUnit(){
+    docElement.style.fontSize = docElement.clientWidth / 10 + 'px'
+}
+setRemUnit();
+window.addEventListener('resize',setRemUnit)
+
 ```
 

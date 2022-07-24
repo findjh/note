@@ -1,3 +1,5 @@
+- webpack目前只能产出commonjs, 后面会支持直接产出ES Module
+
 ### 打包
 
 - `npx webpack `  当有webpack.config.js就使用这个文件来配置，否则就用默认的配置。
